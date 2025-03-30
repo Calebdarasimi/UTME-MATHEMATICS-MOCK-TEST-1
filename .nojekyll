@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics Objective Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('math-background.jpg');
+            background-size: cover;
+        }
+
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .registration-form {
+            margin-bottom: 20px;
+        }
+
+        #registration-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #registration-form label {
+            margin-bottom: 10px;
+        }
+
+        #registration-form input {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #submit-registration {
+            width: 100%;
+            height: 40px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .test-container {
+            display: none;
+        }
+
+        .timer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #time-remaining {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .question-container {
+            margin-bottom: 20px;
+        }
+
+        #question-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #question-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .options input {
+            margin-bottom: 10px;
+        }
+
+        .options label {
+            margin-bottom: 10px;
+        }
+
+        #submit-answer {
+            width: 100%;
+            height: 40px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #percentage {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #time-used {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #speed {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #view-answers {
+            width: 100%;
+            height: 40px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .answer-container {
+            display: none;
+        }
+
+        #answer-list {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mathematics Objective Test</h1>
+        </div>
+        <div class="registration-form">
+            <h2>Registration Form</h2>
+            <form id="registration-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" required>
+                <button id="submit-registration">Submit</button>
+            </form>
+        </div>
+        <div class="test-container" style="display: none;">
+            <div class="timer">
+                <p id="time-remaining">Time Remaining: 30 minutes</p>
+            </div>
+            <div class="question-container">
+                <p id="question-number"></p>
+                <p id="question-text"></p>
+                <div class="options">
+                    <input type="radio" id="option-a" name="option">
+                    <label for="option-a" id="option-a-text"></label>
+                    <input type="radio" id="option-b" name="option">
+                    <label for="option-b" id="option-b-text"></label>
+                    <input type="radio" id="option-c" name="option">
+                    <label for="option-c" id="option-c-text"></label>
+                    <input type="radio" id="option-d" name="option">
+                    <label for="option-d" id="option-d-text"></label>
+                </div>
+                <button id="submit-answer">Submit Answer</button>
+            </div>
+            <div class="result-container" style="display: none;">
+                <h2>Result</h2>
+                <p id="score"></p>
+                <p id="percentage"></p>
+                <p id="time-used"></p>
+                <p id="speed"></p>
+                <button id="view-answers">View Answers</button>
+            </div>
+            <div class="answer-container" style="display: none;">
+                <h2>Answers</h2>
+                <div id="answer-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Questions and answers
+        const questions = [
+            {
+                question: "Solve the equation: 2/x + 7/(x+1) = 1/(x-1)",
+                options: ["A. (-1, 5)", "B. (-1, -5)", "C. (1, 2)", "D. (2, 7)"],
+                answer: "B"
+            },
+            {
+                question: "Factorize completely: x² - 5x + 6",
+                options: ["A. (x-1)(x-6)", "B. (x-2)(x-3)", "C. (x+2)(x+3)", "D. (x-1)(x-5)"],
+                answer: "B"
+            },
+            {
+                question: "Solve for x: 3^(2x-1) = 81",
+                options: ["A. 1.5", "B. 2", "C. 2.5", "D. 3"],
+                answer: "C"
+            },
+            {
+                question: "Simplify: √(50) + √(18) - √(8)",
+                options: ["A. 5√2", "B. 6√2", "C. 7√2", "D. 8√2"],
+                answer: "B"
+            },
+            {
+                question: "Find the LCM of 12x³y and 18x²y⁴",
+                options: ["A. 36x²y", "B. 36x³y⁴", "C. 72x³y", "D. 72x³y⁴"],
+                answer: "B"
+            },
+            {
+                question: "Solve the inequality: 2x - 5 < 3x + 2",
+                options: ["A. x > -7", "B. x < -7", "C. x > 7", "D. x < 7"],
+                answer: "A"
+            },
+            {
+                question: "If p = 1 - √3, find p² + 2p + 3",
+                options: ["A. 1", "B. 2", "C. 3", "D. 4"],
+                answer: "A"
+            },
+            {
+                question: "Solve the simultaneous equations: 2x + y = 7, x - y = -1",
+                options: ["A. (2,3)", "B. (3,2)", "C. (1,2)", "D. (2,1)"],
+                answer: "A"
+            },
+            {
+                question: "Find the sum of the first 20 terms of the arithmetic progression 3, 7, 11,...",
+                options: ["A. 800", "B. 820", "C. 840", "D. 860"],
+                answer: "B"
+            },
+            {
+                question: "Simplify: (x² - 9)/(x² + 5x + 6)",
+                options: ["A. (x-3)/(x+2)", "B. (x+3)/(x-2)", "C. (x-3)/(x-2)", "D. (x+3)/(x+2)"],
+                answer: "A"
+            },
+            {
+                question: "A triangle has sides measuring 5cm, 12cm, and 13cm. What is its area?",
+                options: ["A. 30cm²", "B. 60cm²", "C. 65cm²", "D. 78cm²"],
+                answer: "A"
+            },
+            {
+                question: "Calculate the volume of a cone with radius 7cm and height 12cm (take π = 22/7)",
+                options: ["A. 308cm³", "B. 616cm³", "C. 924cm³", "D. 1232cm³"],
+                answer: "B"
+            },
+            {
+                question: "A chord of length 24cm is 5cm from the center of a circle. Calculate the radius",
+                options: ["A. 7cm", "B. 13cm", "C. 17cm", "D. 25cm"],
+                answer: "B"
+            },
+            {
+                question: "The angle of a sector of a circle is 72°. If the radius is 5cm, find the perimeter of the sector",
+                options: ["A. 12.28cm", "B. 16.28cm", "C. 18.28cm", "D. 22.28cm"],
+                answer: "B"
+            },
+            {
+                question: "A rectangular box has dimensions 8cm by 5cm by 3cm. Find its total surface area",
+                options: ["A. 79cm²", "B. 120cm²", "C. 158cm²", "D. 240cm²"],
+                answer: "C"
+            },
+            {
+                question: "Two similar triangles have corresponding sides in the ratio 3:5. If the area of the smaller triangle is 36cm², find the area of the larger triangle",
+                options: ["A. 60cm²", "B. 100cm²", "C. 144cm²", "D. 225cm²"],
+                answer: "B"
+            },
+            {
+                question: "Find the angle between the diagonals of a rhombus if one of its angles is 60°",
+                options: ["A. 30°", "B. 60°", "C. 90°", "D. 120°"],
+                answer: "B"
+            },
+            {
+                question: "A regular hexagon has side length 4cm. Calculate its area",
+                options: ["A. 24√3 cm²", "B. 36√3 cm²", "C. 48√3 cm²", "D. 64√3 cm²"],
+                answer: "A"
+            },
+            {
+                question: "The diameter of a sphere is 14cm. Find its volume (take π = 22/7)",
+                options: ["A. 1437.33cm³", "B. 1792.33cm³", "C. 2058.67cm³", "D. 2156.00cm³"],
+                answer: "A"
+            },
+            {
+                question: "A pyramid has a square base of side 6cm and height 8cm. Find its volume",
+                options: ["A. 48cm³", "B. 96cm³", "C. 144cm³", "D. 288cm³"],
+                answer: "B"
+            },
+            {
+                question: "Differentiate y = (2x² + 3)³ with respect to x",
+                options: ["A. 6x(2x² + 3)²", "B. 12x(2x² + 3)²", "C. 24x(2x² + 3)²", "D. 48x(2x² + 3)²"],
+                answer: "B"
+            },
+            {
+                question: "Find ∫(3x² - 2x + 1)dx",
+                options: ["A. x³ - x² + x + C", "B. 6x - 2 + C", "C. x³ - 2x² + x + C", "D. x³ - x² + C"],
+                answer: "A"
+            },
+            {
+                question: "Find the derivative of y = sin(3x + 2)",
+                options: ["A. 3cos(3x + 2)", "B. -3cos(3x + 2)", "C. cos(3x + 2)", "D. -cos(3x + 2)"],
+                answer: "A"
+            },
+            {
+                question: "Evaluate ∫(from 0 to 1) (2x + 3)dx",
+                options: ["A. 3", "B. 4", "C. 5", "D. 6"],
+                answer: "B"
+            },
+            {
+                question: "Find the turning point of the curve y = x² - 4x + 3",
+                options: ["A. (1,0)", "B. (2,-1)", "C. (3,0)", "D. (4,3)"],
+                answer: "B"
+            },
+            {
+                question: "If dy/dx = 6x² - 4x and y = 10 when x = 1, find y when x = 2",
+                options: ["A. 12", "B. 14", "C. 16", "D. 18"],
+                answer: "D"
+            },
+            {
+                question: "Find the second derivative of y = x³ - 2x² + 5x - 1",
+                options: ["A. 3x² - 4x + 5", "B. 6x - 4", "C. 6x + 4", "D. 6x² - 4x"],
+                answer: "B"
+            },
+            {
+                question: "Evaluate lim(x→2) (x² - 4)/(x - 2)",
+                options: ["A. 0", "B. 2", "C. 4", "D. Undefined"],
+                answer: "C"
+            },
+            {
+                question: "Find the area bounded by the curve y = x², the x-axis, and the lines x = 1 and x = 2",
+                options: ["A. 7/3", "B. 8/3", "C. 3", "D. 10/3"],
+                answer: "A"
+            },
+            {
+                question: "If f(x) = (2x + 1)/(x - 3), find f'(x)",
+                options: ["A. -7/(x-3)²", "B. 7/(x-3)²", "C. (5)/(x-3)²", "D. (-5)/(x-3)²"],
+                answer: "A"
+            },
+            {
+                question: "The mean of 5, 8, 10, 12, x is 9. Find x",
+                options: ["A. 7", "B. 8", "C. 9", "D. 10"],
+                answer: "D"
+            },
+            {
+                question: "A fair die is rolled once. What is the probability of getting a prime number?",
+                options: ["A. 1/6", "B. 1/3", "C. 1/2", "D. 2/3"],
+                answer: "C"
+            },
+            {
+                question: "The marks obtained by 10 students are: 5, 9, 7, 6, 8, 4, 5, 7, 6, 8. Find the median",
+                options: ["A. 5.5", "B. 6", "C. 6.5", "D. 7"],
+                answer: "C"
+            },
+            {
+                question: "A bag contains 4 red and 6 blue balls. Two balls are drawn at random. Find the probability that both are red",
+                options: ["A. 2/15", "B. 4/25", "C. 3/20", "D. 1/5"],
+                answer: "A"
+            },
+            {
+                question: "The variance of 2, 4, 6, 8, 10 is:",
+                options: ["A. 4", "B. 6", "C. 8", "D. 10"],
+                answer: "C"
+            },
+            {
+                question: "In how many ways can the letters of the word 'MATHS' be arranged?",
+                options: ["A. 24", "B. 60", "C. 120", "D. 720"],
+                answer: "C"
+            },
+            {
+                question: "The mean deviation of 2, 5, 7, 8, 10 is:",
+                options: ["A. 2.0", "B. 2.4", "C. 2.8", "D. 3.2"],
+                answer: "B"
+            },
+            {
+                question: "A committee of 3 is to be formed from 5 men and 4 women. In how many ways can this be done if there must be at least one woman?",
+                options: ["A. 30", "B. 50", "C. 74", "D. 80"],
+                answer: "C"
+            },
+            {
+                question: "The probability that a student passes Mathematics is 2/3 and Physics is 4/9. If the probability of passing at least one subject is 4/5, find the probability of passing both subjects",
+                options: ["A. 14/45", "B. 8/15", "C. 22/45", "D. 4/9"],
+                answer: "A"
+            },
+            {
+                question: "The quartile deviation of 3, 5, 7, 9, 11, 13, 15 is:",
+                options: ["A. 3", "B. 4", "C. 5", "D. 6"],
+                answer: "B"
+            }
+        ];
+
+        // Registration form
+        const registrationForm = document.getElementById("registration-form");
+        const submitRegistration = document.getElementById("submit-registration");
+
+        submitRegistration.addEventListener("click", (e) => {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            // Save registration data to server or local storage
+            // ...
+            registrationForm.style.display = "none";
+            document.querySelector(".test-container").style.display = "block";
+            startTest();
+        });
+
+        // Test container
+        const testContainer = document.querySelector(".test-container");
+        const timer = document.getElementById("time-remaining");
+        const questionContainer = document.querySelector(".question-container");
+        const options = document.querySelectorAll(".options input");
+        const submitAnswer = document.getElementById("submit-answer");
+        const resultContainer = document.querySelector(".result-container");
+        const answerContainer = document.querySelector(".answer-container");
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timeRemaining = 30 * 60; // 30 minutes
+        let startTime;
+
+        function startTest() {
+            startTime = new Date().getTime();
+            updateTimer();
+            showQuestion();
+        }
+
+        function updateTimer() {
+            const currentTime = new Date().getTime();
+            const timeElapsed = (currentTime - startTime) / 1000;
+            timeRemaining -= timeElapsed;
+            if (timeRemaining <= 0) {
+                submitTest();
+            } else {
+                timer.textContent = `Time Remaining: ${formatTime(timeRemaining)}`;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes} minutes ${seconds} seconds`;
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById("question-number").textContent = `Question ${currentQuestion + 1}`;
+            document.getElementById("question-text").textContent = question.question;
+            const optionA = document.getElementById("option-a-text");
+            const optionB = document.getElementById("option-b-text");
+            const optionC = document.getElementById("option-c-text");
+            const optionD = document.getElementById("option-d-text");
+            optionA.textContent = question.options[0];
+            optionB.textContent = question.options[1];
+            optionC.textContent = question.options[2];
+            optionD.textContent = question.options[3];
+        }
+
+        submitAnswer.addEventListener("click", () => {
+            const selectedOption = getSelectedOption();
+            if (selectedOption === questions[currentQuestion].answer) {
+                score++;
+            }
+            currentQuestion++;
+            if (currentQuestion >= questions.length) {
+                submitTest();
+            } else {
+                showQuestion();
+            }
+        });
+
+        function getSelectedOption() {
+            for (const option of options) {
+                if (option.checked) {
+                    return option.id.charAt(option.id.length - 1).toUpperCase();
+                }
+            }
+            return null;
+        }
+
+        function submitTest() {
+            resultContainer.style.display = "block";
+            const scoreText = document.getElementById("score");
+            const percentageText = document.getElementById("percentage");
+            const timeUsedText = document.getElementById("time-used");
+            const speedText = document.getElementById("speed");
+            scoreText.textContent = `Score: ${score} out of ${questions.length}`;
+            percentageText.textContent = `Percentage: ${((score / questions.length) * 100).toFixed(2)}%`;
+            timeUsedText.textContent = `Time Used: ${formatTime(timeRemaining)}`;
+            speedText.textContent = `Speed: ${((score / questions.length) * 100).toFixed(2)}%`;
+            // Save test results to server or local storage
+            // ...
+        }
+
+        // View answers
+        const viewAnswers = document.getElementById("view-answers");
+
+        viewAnswers.addEventListener("click", () => {
+            answerContainer.style.display = "block";
+            const answerList = document.getElementById("answer-list");
+            for (const question of questions) {
+                const answer = document.createElement("p");
+                answer.textContent = `Question ${questions.indexOf(question) + 1}: ${question.answer}`;
+                answerList.appendChild(answer);
+            }
+        });
+
+        // Prevent tab switching
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+                submitTest();
+            }
+        });
+    </script>
+</body>
+</html>
